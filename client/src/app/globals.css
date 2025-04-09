@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body,
+#root,
+.app {
+  height: 100%;
+  width: 100%;
+  @apply bg-white;
+  @apply text-gray-900;
+  @apply text-sm;
+  @apply dark:bg-black
+}
+
