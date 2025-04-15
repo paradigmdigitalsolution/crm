@@ -92,10 +92,10 @@ const HomePage = () => {
       };
 
   return (
-    <div className="container h-full w-[100%] bg-gray-100 p-8">
+    <div className="container h-full w-[100%] bg-gray-100 p-8 dark:bg-[#101214]">
       <Header name="Project Management Dashboard" />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="rounded-lg bg-white p-4 shadow dark:bg-dark-secondary">
+        <div className="rounded-lg bg-white p-4 shadow dark:bg-[#1d1f21]">
           <h3 className="mb-4 text-lg font-semibold dark:text-white">
             Task Priority Distribution
           </h3>
@@ -118,7 +118,7 @@ const HomePage = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="rounded-lg bg-white p-4 shadow dark:bg-dark-secondary">
+        <div className="rounded-lg bg-white p-4 shadow dark:bg-[#1d1f21]">
           <h3 className="mb-4 text-lg font-semibold dark:text-white">
             Project Status
           </h3>
@@ -137,7 +137,7 @@ const HomePage = () => {
             </PieChart>
           </ResponsiveContainer>
         </div>
-        <div className="rounded-lg bg-white p-4 shadow dark:bg-dark-secondary md:col-span-2">
+        <div className="rounded-lg bg-white p-4 shadow dark:bg-[#1d1f21] md:col-span-2">
           <h3 className="mb-4 text-lg font-semibold dark:text-white">
             Your Tasks
           </h3>

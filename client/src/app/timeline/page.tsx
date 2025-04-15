@@ -54,7 +54,7 @@ const Timeline = () => {
         <Header name="Projects Timeline" />
         <div className="relative inline-block w-64">
           <select
-            className="focus:shadow-outline block w-full appearance-none rounded border border-gray-400 bg-white px-4 py-2 pr-8 leading-tight shadow hover:border-gray-500 focus:outline-none dark:border-dark-secondary dark:bg-dark-secondary dark:text-white"
+            className="focus:shadow-outline block w-full appearance-none rounded border border-gray-400 bg-white px-4 py-2 pr-8 leading-tight shadow hover:border-gray-500 focus:outline-none dark:border-dark-[#1d1f21] dark:bg-[#1d1f21] dark:text-white"
             value={displayOptions.viewMode}
             onChange={handleViewModeChange}
           >
@@ -65,7 +65,7 @@ const Timeline = () => {
         </div>
       </header>
 
-      <div className="overflow-hidden rounded-md bg-white shadow dark:bg-dark-secondary dark:text-white">
+      <div className="overflow-hidden rounded-md bg-white shadow dark:bg-[#1d1f21] dark:text-white">
         <div className="timeline">
           <FrappeGanttChart
             tasks={ganttTasks}

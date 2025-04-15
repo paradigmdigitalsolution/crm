@@ -1,11 +1,12 @@
 import { useGetTaskQuery, useUpdateTaskStatusMutation } from "@/state/api";
-import React from "react";
+import React, { useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Task as TaskType } from "@/state/api";
-import { EllipsisVertical, MessageSquareMore, Plus } from "lucide-react";
+import { EllipsisVertical, MessageSquareMore, Plus, X } from "lucide-react";
 import { format } from "date-fns";
 import Image from "next/image";
+import { useAppSelector } from "@/app/redux";
 
 type BoardProps = {
   id: string;
@@ -88,11 +89,11 @@ const TaskColumn = ({
           className={`w-2 !bg-[${statusColor[status]}] rounded-s-lg`}
           style={{ backgroundColor: statusColor[status] }}
         />
-        <div className="flex w-full items-center justify-between rounded-e-lg bg-white px-5 py-4 dark:bg-dark-secondary">
+        <div className="flex w-full items-center justify-between rounded-e-lg bg-white px-5 py-4 dark:bg-[#1d1f21]">
           <h3 className="flex items-center text-lg font-semibold dark:text-white">
             {status}{" "}
             <span
-              className="ml-2 inline-block rounded-full bg-gray-200 p-1 text-center text-sm leading-none dark:bg-dark-tertiary"
+              className="ml-2 inline-block rounded-full bg-gray-200 p-1 text-center text-sm leading-none dark:bg-[#3b3d40]"
               style={{ width: "1.5rem", height: "1.5rem" }}
             >
               {tasksCount}
@@ -103,7 +104,7 @@ const TaskColumn = ({
               <EllipsisVertical size={26} />
             </button>
             <button
-              className="flex h-6 w-6 items-center justify-center rounded bg-gray-200 dark:bg-dark-tertiary dark:text-white"
+              className="flex h-6 w-6 items-center justify-center rounded bg-gray-200 dark:bg-[#3b3d40] dark:text-white"
               onClick={() => setIsModalNewTaskOpen(true)}
             >
               <Plus size={16} />
@@ -134,6 +135,62 @@ const Task = ({ task }: TaskProps) => {
     }),
   }));
 
+  const [showComments, setShowComments] = useState(false); // State to toggle comments visibility
+  const [newComment, setNewComment] = useState(""); // State for new comment
+  const [comments, setComments] = useState(task.comments || []); // Local state for comments
+  const user = useAppSelector((state) => state.global.user);
+
+  const handleAddComment = async () => {
+    if (!newComment.trim()) return;
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comments/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: newComment,
+          taskId: task.id,
+          userId: user?.userId, // Replace with actual user ID
+        }),
+      });
+
+      if (response.ok) {
+        const addedComment = await response.json();
+        setComments((prev) => [...prev, addedComment]);
+        setNewComment(""); // Clear input field
+      } else {
+        console.error("Failed to add comment");
+      }
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
+
+  const handleDeleteComment = async (commentId: number) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comments/${commentId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user?.userId, // Pass the logged-in user's ID
+        }),
+      });
+  
+      if (response.ok) {
+        setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+      } else {
+        const errorData = await response.json();
+        console.error(errorData.message); // Show error message from the backend
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
+
   const taskTagsSplit = task.tags ? task.tags.split(",") : [];
 
   const formattedStartDate = task.startDate
@@ -143,20 +200,18 @@ const Task = ({ task }: TaskProps) => {
     ? format(new Date(task.dueDate), "P")
     : "";
 
-  const numberOfComments = (task.comments && task.comments.length) || 0;
-
   const PriorityTag = ({ priority }: { priority: TaskType["priority"] }) => (
     <div
       className={`rounded-full px-2 py-1 text-xs font-semibold ${
         priority === "Urgent"
           ? "bg-red-200 text-red-700"
           : priority === "High"
-            ? "bg-yellow-200 text-yellow-700"
-            : priority === "Medium"
-              ? "bg-green-200 text-green-700"
-              : priority === "Low"
-                ? "bg-blue-200 text-blue-700"
-                : "bg-gray-200 text-gray-700"
+          ? "bg-yellow-200 text-yellow-700"
+          : priority === "Medium"
+          ? "bg-green-200 text-green-700"
+          : priority === "Low"
+          ? "bg-blue-200 text-blue-700"
+          : "bg-gray-200 text-gray-700"
       }`}
     >
       {priority}
@@ -168,7 +223,7 @@ const Task = ({ task }: TaskProps) => {
       ref={(instance) => {
         drag(instance);
       }}
-      className={`mb-4 rounded-md bg-white shadow dark:bg-dark-secondary ${
+      className={`mb-4 rounded-md bg-white shadow dark:bg-[#1d1f21] ${
         isDragging ? "opacity-50" : "opacity-100"
       }`}
     >
@@ -191,7 +246,6 @@ const Task = ({ task }: TaskProps) => {
                   key={tag}
                   className="rounded-full bg-blue-100 px-2 py-1 text-xs"
                 >
-                  {" "}
                   {tag}
                 </div>
               ))}
@@ -218,7 +272,7 @@ const Task = ({ task }: TaskProps) => {
         <p className="text-sm text-gray-600 dark:text-neutral-500">
           {task.description}
         </p>
-        <div className="mt-4 border-t border-gray-200 dark:border-stroke-dark" />
+        <div className="mt-4 border-t border-gray-200 dark:border-[#2d3135]" />
 
         {/* Users */}
         <div className="mt-3 flex items-center justify-between">
@@ -230,7 +284,7 @@ const Task = ({ task }: TaskProps) => {
                 alt={task.assignee.username}
                 width={30}
                 height={30}
-                className="h-8 w-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary"
+                className="h-8 w-8 rounded-full border-2 border-white object-cover dark:border-[#1d1f21]"
               />
             )}
             {task.author && (
@@ -240,17 +294,67 @@ const Task = ({ task }: TaskProps) => {
                 alt={task.author.username}
                 width={30}
                 height={30}
-                className="h-8 w-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary"
+                className="h-8 w-8 rounded-full border-2 border-white object-cover dark:border-[#1d1f21]"
               />
             )}
           </div>
           <div className="flex items-center text-gray-500 dark:text-neutral-500">
-            <MessageSquareMore size={20} />
-            <span className="ml-1 text-sm dark:text-neutral-400">
-              {numberOfComments}
-            </span>
+            <button
+              onClick={() => setShowComments(!showComments)} // Toggle comments visibility
+              className="flex items-center"
+            >
+              <MessageSquareMore size={20} />
+              <span className="ml-1 text-sm dark:text-neutral-400">
+                {task.comments && task.comments.length}
+              </span>
+            </button>
           </div>
         </div>
+
+        {/* Comments Section */}
+        {showComments && (
+          <div className="mt-3">
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <div
+                  key={comment.id}
+                  className="mb-2 flex items-center justify-between rounded bg-gray-100 p-2 dark:bg-[#3b3d40]"
+                >
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    <strong>{comment.user?.username}:</strong> {comment.text}
+                  </p>
+                  {comment.userId === user?.userId && ( // Show delete button only if the comment belongs to the user
+                    <button
+                      onClick={() => handleDeleteComment(comment.id)}
+                      className="text-sm text-gray-500 hover:underline"
+                    >
+                      <X className="size-4"/>
+                    </button>
+                  )}
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500 dark:text-neutral-500">
+                No comments available.
+              </p>
+            )}
+            <div className="mt-2 flex items-center gap-2">
+              <input
+                type="text"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Add a comment..."
+                className="flex-1 rounded border border-gray-300 p-2 text-sm dark:border-[#3b3d40] dark:bg-[#1d1f21] dark:text-white"
+              />
+              <button
+                onClick={handleAddComment}
+                className="rounded bg-blue-600 px-3 py-2 text-sm text-white hover:bg-blue-500"
+              >
+                Sent
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

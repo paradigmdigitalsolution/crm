@@ -56,7 +56,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 /* REDUX STORE */
 export const makeStore = () => {
-  return configureStore({
+  const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefault) =>
       getDefault({
@@ -65,6 +65,8 @@ export const makeStore = () => {
         },
       }).concat(api.middleware),
   });
+  console.log("Store Created:", store); // Debugging log
+  return store;
 };
 
 /* REDUX TYPES */
@@ -84,6 +86,7 @@ export default function StoreProvider({
   if (!storeRef.current) {
     storeRef.current = makeStore();
     setupListeners(storeRef.current.dispatch);
+    console.log("Redux Store Initialized:", storeRef.current); // Debugging log
   }
   const persistor = persistStore(storeRef.current);
 

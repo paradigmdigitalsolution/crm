@@ -1,6 +1,6 @@
 "use client";
 import { useGetUsersQuery } from "@/state/api";
-import React from "react";
+import React, { useState } from "react";
 import { useAppSelector } from "../redux";
 import Header from "@/components/Header";
 import {
@@ -12,6 +12,8 @@ import {
 } from "@mui/x-data-grid";
 import Image from "next/image";
 import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
+import ModalNewUser from "@/components/ModalNewUser";
+import { PlusSquare } from "lucide-react";
 
 const CustomToolbar = () => (
   <GridToolbarContainer className="toolbar flex gap-2">
@@ -23,6 +25,7 @@ const CustomToolbar = () => (
 const columns: GridColDef[] = [
   { field: "userId", headerName: "ID", width: 100 },
   { field: "username", headerName: "Username", width: 150 },
+  { field: "role", headerName: "Role", width: 150 },
   {
     field: "profilePictureUrl",
     headerName: "Profile Picture",
@@ -46,13 +49,24 @@ const columns: GridColDef[] = [
 const Users = () => {
   const { data: users, isLoading, isError } = useGetUsersQuery();
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+  const [isOpen, setIsOpen] = useState(false);
 
   if (isLoading) return <div>Loading...</div>;
   if (isError || !users) return <div>Error fetching users</div>;
 
   return (
     <div className="flex w-full flex-col p-8">
-      <Header name="Users" />
+      <ModalNewUser isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <Header name="Users" 
+      buttonComponent={
+        <button
+          className="flex items-center rounded-md bg-[#0275ff] px-3 py-2 text-white hover:bg-blue-600"
+          onClick={() => setIsOpen(true)}
+        >
+          <PlusSquare className="mr-2 h-5 w-5" /> New User
+        </button>
+      }/>
+      
       <div style={{ height: 650, width: "100%" }}>
         <DataGrid
           rows={users || []}
@@ -62,8 +76,8 @@ const Users = () => {
           slots={{
             toolbar: CustomToolbar,
           }}
-          className={dataGridClassNames}
-          sx={dataGridSxStyles(isDarkMode)}
+          className={`${dataGridClassNames} `}
+          sx={dataGridSxStyles}
         />
       </div>
     </div>

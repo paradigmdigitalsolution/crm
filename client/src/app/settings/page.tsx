@@ -1,12 +1,16 @@
+"use client"
 import Header from "@/components/Header";
 import React from "react";
+import { useAppDispatch, useAppSelector } from "../redux";
+
 
 const Settings = () => {
+  const user = useAppSelector((state) => state.global.user);
   const userSettings = {
-    username: "johndoe",
+    username: user?.username,
     email: "john.doe@example.com",
-    teamName: "Development Team",
-    roleName: "Developer",
+    teamName: user?.teamName,
+    roleName: user?.role,
   };
 
   const labelStyles = "block text-sm font-medium dark:text-white";

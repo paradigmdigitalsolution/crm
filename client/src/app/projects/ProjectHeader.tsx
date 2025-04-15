@@ -30,7 +30,7 @@ const ProjectHeader = ({ activeTab, setActiveTab }: Props) => {
           name="Product Design Development"
           buttonComponent={
             <button
-              className="flex items-center rounded-md bg-blue-primary px-3 py-2 text-white bg-blue-700 hover:bg-blue-600"
+              className="flex items-center rounded-md bg-[#0275ff] px-3 py-2 text-white  hover:bg-blue-600"
               onClick={() => setIsModalNewProjectOpen(true)}
             >
               <PlusSquare className="mr-2 h-5 w-5" /> New Boards
@@ -40,7 +40,7 @@ const ProjectHeader = ({ activeTab, setActiveTab }: Props) => {
       </div>
 
       {/* TABS */}
-      <div className="flex flex-wrap-reverse gap-2 border-y border-gray-200 pb-[8px] pt-2 dark:border-stroke-dark md:items-center">
+      <div className="flex flex-wrap-reverse gap-2 border-y border-gray-200 pb-[8px] pt-2 dark:border-[#2d3135] md:items-center">
         <div className="flex flex-1 items-center gap-2 md:gap-4">
           <TabButton
             name="Board"
@@ -78,7 +78,7 @@ const ProjectHeader = ({ activeTab, setActiveTab }: Props) => {
             <input
               type="text"
               placeholder="Search Task"
-              className="rounded-md border py-1 pl-10 pr-4 focus:outline-none dark:border-dark-secondary dark:bg-dark-secondary dark:text-white"
+              className="rounded-md border py-1 pl-10 pr-4 focus:outline-none dark:border-[#1d1f21] dark:bg-[#1d1f21] dark:text-white"
             />
             <Grid3x3 className="absolute left-3 top-2 h-4 w-4 text-gray-400 dark:text-neutral-500" />
           </div>

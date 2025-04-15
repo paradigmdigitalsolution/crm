@@ -1,32 +1,32 @@
 export const dataGridClassNames =
-  "border border-gray-200 bg-white shadow dark:border-stroke-dark dark:bg-dark-secondary dark:text-gray-200";
+  "border border-gray-200 bg-white shadow dark:border-[#2d3135] dark:bg-[#1d1f21] dark:text-gray-200";
 
-export const dataGridSxStyles = (isDarkMode: boolean) => {
+export const dataGridSxStyles = () => {
   return {
     "& .MuiDataGrid-columnHeaders": {
-      color: `${isDarkMode ? "#e5e7eb" : ""}`,
+      color: "text-gray-900 dark:text-gray-200",
       '& [role="row"] > *': {
-        backgroundColor: `${isDarkMode ? "#1d1f21" : "white"}`,
-        borderColor: `${isDarkMode ? "#2d3135" : ""}`,
+        backgroundColor: "bg-white dark:bg-[#1d1f21]",
+        borderColor: "border-gray-200 dark:border-[#2d3135]",
       },
     },
     "& .MuiIconbutton-root": {
-      color: `${isDarkMode ? "#a3a3a3" : ""}`,
+      color: "text-gray-500 dark:text-gray-200",
     },
     "& .MuiTablePagination-root": {
-      color: `${isDarkMode ? "#a3a3a3" : ""}`,
+      color: "text-gray-500 dark:text-gray-200",
     },
     "& .MuiTablePagination-selectIcon": {
-      color: `${isDarkMode ? "#a3a3a3" : ""}`,
+      color: "text-gray-500 dark:text-gray-200",
     },
     "& .MuiDataGrid-cell": {
-      border: "none",
+      border: "border-none",
     },
     "& .MuiDataGrid-row": {
-      borderBottom: `1px solid ${isDarkMode ? "#2d3135" : "e5e7eb"}`,
+      borderBottom: "border-b border-gray-200 dark:border-[#2d3135]",
     },
     "& .MuiDataGrid-withBorderColor": {
-      borderColor: `${isDarkMode ? "#2d3135" : "e5e7eb"}`,
+      borderColor: "border-gray-200 dark:border-[#2d3135]",
     },
   };
 };

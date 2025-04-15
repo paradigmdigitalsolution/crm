@@ -16,7 +16,11 @@ export const getTask = async (
             include:{
                 author: true,
                 assignee: true,
-                comments: true,
+                comments: {
+                    include: {
+                        user: true
+                    }
+                },
                 attachments: true,
             }
         })
@@ -91,7 +95,7 @@ export const getUserTasks = async (
     req: Request,
     res: Response
   ): Promise<void> => {
-    const { userId } = req.params;
+    const { userId, username } = req.params;
     try {
       const tasks = await prisma.task.findMany({
         where: {
